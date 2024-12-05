@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interactive Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @keyframes bounce-in {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.2);
+        }
+      }
+      .bounce-in {
+        animation: bounce-in 1s ease-in-out infinite;
+      }
+
+      @keyframes fade-in {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      .fade-in {
+        animation: fade-in 1s ease-in-out;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div
+      id="quiz-container"
+      class="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg"
+    >
+      <!-- Initial Quiz Info -->
+      <div id="quiz-intro" class="text-center">
+        <h1 class="text-2xl font-bold mb-4">Welcome to the Quiz!</h1>
+        <p class="text-gray-600">
+          Test your knowledge with this short multiple-choice quiz.
+        </p>
+        <button
+          id="start-quiz"
+          class="mt-6 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
+        >
+          Start Quiz
+        </button>
+      </div>
+
+      <!-- Quiz Questions -->
+      <div id="quiz-questions" class="hidden">
+        <!-- Question 1 -->
+        <div class="question hidden" data-id="1">
+          <h2 class="font-semibold text-lg mb-4">Question 1: What is 2 + 2?</h2>
+          <div class="space-y-2">
+            <label class="block">
+              <input type="radio" name="q1" value="3" class="mr-2" /> 3
+            </label>
+            <label class="block">
+              <input type="radio" name="q1" value="4" class="mr-2" /> 4
+            </label>
+            <label class="block">
+              <input type="radio" name="q1" value="5" class="mr-2" /> 5
+            </label>
+          </div>
+        </div>
+        <!-- Question 2 -->
+        <div class="question hidden" data-id="2">
+          <h2 class="font-semibold text-lg mb-4">
+            Question 2: What is the chemical symbol for water?
+          </h2>
+          <div class="space-y-2">
+            <label class="block">
+              <input type="radio" name="q2" value="O2" class="mr-2" /> O2
+            </label>
+            <label class="block">
+              <input type="radio" name="q2" value="H2O" class="mr-2" /> H2O
+            </label>
+            <label class="block">
+              <input type="radio" name="q2" value="CO2" class="mr-2" /> CO2
+            </label>
+          </div>
+        </div>
+        <!-- Question 3 -->
+        <div class="question hidden" data-id="3">
+          <h2 class="font-semibold text-lg mb-4">
+            Question 3: Who was the first President of the United States?
+          </h2>
+          <div class="space-y-2">
+            <label class="block">
+              <input
+                type="radio"
+                name="q3"
+                value="Abraham Lincoln"
+                class="mr-2"
+              />
+              Abraham Lincoln
+            </label>
+            <label class="block">
+              <input
+                type="radio"
+                name="q3"
+                value="George Washington"
+                class="mr-2"
+              />
+              George Washington
+            </label>
+            <label class="block">
+              <input
+                type="radio"
+                name="q3"
+                value="Thomas Jefferson"
+                class="mr-2"
+              />
+              Thomas Jefferson
+            </label>
+          </div>
+        </div>
+        <!-- Question 4 -->
+        <div class="question hidden" data-id="4">
+          <h2 class="font-semibold text-lg mb-4">
+            Question 4: How many players are there on a soccer team?
+          </h2>
+          <div class="space-y-2">
+            <label class="block">
+              <input type="radio" name="q4" value="9" class="mr-2" /> 9
+            </label>
+            <label class="block">
+              <input type="radio" name="q4" value="11" class="mr-2" /> 11
+            </label>
+            <label class="block">
+              <input type="radio" name="q4" value="13" class="mr-2" /> 13
+            </label>
+          </div>
+        </div>
+        <!-- Question 5 -->
+        <div class="question hidden" data-id="5">
+          <h2 class="font-semibold text-lg mb-4">
+            Question 5: What is the largest desert in the world?
+          </h2>
+          <div class="space-y-2">
+            <label class="block">
+              <input type="radio" name="q5" value="Sahara" class="mr-2" />
+              Sahara
+            </label>
+            <label class="block">
+              <input type="radio" name="q5" value="Antarctica" class="mr-2" />
+              Antarctica
+            </label>
+            <label class="block">
+              <input type="radio" name="q5" value="Gobi" class="mr-2" /> Gobi
+            </label>
+          </div>
+        </div>
+
+        <button
+          id="next-question"
+          class="mt-6 bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded"
+        >
+          Next
+        </button>
+      </div>
+
+      <!-- Quiz Result -->
+      <div id="quiz-result" class="hidden text-center">
+        <h1 class="text-2xl font-bold mb-4">Your Result</h1>
+        <p id="result-text" class="text-gray-700 mb-6"></p>
+        <div id="result-animation"></div>
+        <button
+          id="restart-quiz"
+          class="mt-6 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
+        >
+          Restart Quiz
+        </button>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const startQuizBtn = document.getElementById("start-quiz");
+        const nextQuestionBtn = document.getElementById("next-question");
+        const restartQuizBtn = document.getElementById("restart-quiz");
+
+        const quizIntro = document.getElementById("quiz-intro");
+        const quizQuestions = document.getElementById("quiz-questions");
+        const quizResult = document.getElementById("quiz-result");
+        const resultText = document.getElementById("result-text");
+        const resultAnimation = document.getElementById("result-animation");
+
+        const questions = document.querySelectorAll(".question");
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        function showElement(element) {
+          element.classList.remove("hidden");
+        }
+
+        function hideElement(element) {
+          element.classList.add("hidden");
+        }
+
+        function handleNextQuestion() {
+          const currentQuestion = questions[currentQuestionIndex];
+          const selectedAnswer = currentQuestion.querySelector("input:checked");
+
+          if (selectedAnswer) {
+            // Check answers
+            const correctAnswers = [
+              "4",
+              "H2O",
+              "George Washington",
+              "11",
+              "Antarctica",
+            ];
+            if (selectedAnswer.value === correctAnswers[currentQuestionIndex]) {
+              score++;
+            }
+
+            hideElement(currentQuestion);
+
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+              showElement(questions[currentQuestionIndex]);
+            } else {
+              showResult();
+            }
+          } else {
+            alert("Please select an answer!");
+          }
+        }
+
+        function showResult() {
+          hideElement(quizQuestions);
+          showElement(quizResult);
+
+          resultText.textContent = `You scored ${score} out of ${questions.length}.`;
+
+          // Display animations based on score
+          if (score === questions.length) {
+            resultAnimation.innerHTML =
+              '<p class="text-green-500 text-lg font-bold bounce-in">Perfect Score! 🎉</p>';
+          } else if (score >= questions.length / 2) {
+            resultAnimation.innerHTML =
+              '<p class="text-yellow-500 text-lg font-bold fade-in">Good job! 😊</p>';
+          } else {
+            resultAnimation.innerHTML =
+              '<p class="text-red-500 text-lg font-bold fade-in">Better luck next time! 😞</p>';
+          }
+        }
+
+        function restartQuiz() {
+          score = 0;
+          currentQuestionIndex = 0;
+
+          questions.forEach((question) => hideElement(question));
+          hideElement(quizResult);
+          showElement(quizIntro);
+        }
+
+        startQuizBtn.addEventListener("click", () => {
+          hideElement(quizIntro);
+          showElement(quizQuestions);
+          showElement(questions[currentQuestionIndex]);
+        });
+
+        nextQuestionBtn.addEventListener("click", handleNextQuestion);
+        restartQuizBtn.addEventListener("click", restartQuiz);
+      });
+    </script>
+  </body>
+</html>
