@@ -123,7 +123,7 @@
         <!-- Question 4 -->
         <div class="question hidden" data-id="4">
           <h2 class="font-semibold text-lg mb-4">
-            Question 4: How many players are there on a soccer team?
+            Question 4: How many players are there on a football team?
           </h2>
           <div class="space-y-2">
             <label class="block">
@@ -153,6 +153,26 @@
             </label>
             <label class="block">
               <input type="radio" name="q5" value="Gobi" class="mr-2" /> Gobi
+            </label>
+          </div>
+        </div>
+        <!-- Question 6 -->
+        <div class="question hidden" data-id="6">
+          <h2 class="font-semibold text-lg mb-4">
+            Question 6: Which house at Hogwarts was Harry Potter a part of?
+          </h2>
+          <div class="space-y-2">
+            <label class="block">
+              <input type="radio" name="q6" value="Ravenclaw" class="mr-2" />
+              Ravenclaw
+            </label>
+            <label class="block">
+              <input type="radio" name="q6" value="Gryffindor" class="mr-2" />
+              Gryffindor
+            </label>
+            <label class="block">
+              <input type="radio" name="q6" value="Hufflepuff" class="mr-2" />
+              Hufflepuff
             </label>
           </div>
         </div>
@@ -215,6 +235,7 @@
               "George Washington",
               "11",
               "Antarctica",
+              "Gryffindor",
             ];
             if (selectedAnswer.value === correctAnswers[currentQuestionIndex]) {
               score++;
