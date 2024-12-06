@@ -274,12 +274,24 @@
         }
 
         function restartQuiz() {
+          // Reset score and current question index
           score = 0;
           currentQuestionIndex = 0;
 
-          questions.forEach((question) => hideElement(question));
-          hideElement(quizResult);
-          showElement(quizIntro);
+          // Reset all radio buttons
+          const radioButtons = document.querySelectorAll('input[type="radio"]');
+          radioButtons.forEach((radio) => {
+            radio.checked = false; // Uncheck all radio buttons
+          });
+
+          // Hide result section and reset question visibility
+          document.getElementById("quiz-result").classList.add("hidden");
+          document.querySelectorAll(".question").forEach((question) => {
+            question.classList.add("hidden"); // Hide all questions
+          });
+
+          // Show the intro section
+          document.getElementById("quiz-intro").classList.remove("hidden");
         }
 
         startQuizBtn.addEventListener("click", () => {
